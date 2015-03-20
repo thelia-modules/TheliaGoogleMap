@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <!-- sample definition
+        <loop name="MySuperLoop" class="TheliaGoogleMap\Loop\MySuperLoop" />
+        -->
+    </loops>
+
+    <forms>
+        <form name="theliagooglemap.configuration.form" class="TheliaGoogleMap\Form\ConfigurationForm" />
+    </forms>
+
+    <commands>
+        <!--
+        <command class="TheliaGoogleMap\Command\MySuperCommand" />
+        -->
+    </commands>
+
+
+    <services>
+        <service id="theliagooglemap.smarty.plugin" class="TheliaGoogleMap\Smarty\Plugins\GoogleMap" scope="request">
+            <tag name="thelia.parser.register_plugin"/>
+        </service>
+    </services>
+
+
+
+    <hooks>
+        <hook id="theliagooglemap.hook" class="TheliaGoogleMap\Hook\MapFrontHook" scope="request">
+            <tag name="hook.event_listener" event="main.stylesheet" type="front" method="onMainStyleSheet" />
+            <tag name="hook.event_listener" event="main.after-javascript-include" type="front" method="onMainAfterJVSIncludes" />
+        </hook>
+    </hooks>
+
+
+    <!--
+    <exports>
+
+    </exports>
+    -->
+
+    <!--
+    <imports>
+
+    </imports>
+    -->
+</config>

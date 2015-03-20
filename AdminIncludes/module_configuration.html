@@ -1,0 +1,57 @@
+{default_translation_domain domain='theliagooglemap.ba.default'}
+
+<div class="modal fade" id="theliagooglemap-failed" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{intl  l="An error occured"}</h3>
+            </div>
+            <div class="modal-body" id="theliagooglemap-failed-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="general-block-decorator">
+    <div class="row">
+
+        <div class="col-md-12 title title-without-tabs">
+            {intl l='Edit your Google Map configuration.'}
+        </div>
+
+        <div class="form-container">
+            <div class="col-md-12">
+
+                <div id="theliagooglemap-success-msg" class="alert alert-success"></div>
+
+
+                {form name="theliagooglemap.configuration.form"}
+                <form method="POST" id="theliagooglemap-form" action="{url path="/admin/module/theliagooglemap/save"}" {form_enctype form=$form} class="clearfix">
+
+                {form_hidden_fields form=$form}
+
+                {form_field form=$form field='apikey'}
+                <div class="form-group">
+                    <label class="control-label" for="{$label_attr.for}">
+                        {$label}
+                    </label>
+
+                    {form_error form=$form field="apikey"}{$message}{/form_error}
+
+                    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$api_key}" placeholder="{intl l='Google Map API key'}" />
+                </div>
+                {/form_field}
+
+                <button type="submit" id="theliagooglemap-save" name="theliagooglemap_save" value="save" class="form-submit-button btn btn-sm btn-default" title="{intl l='Save'}">{intl  l='Save'}</button>
+                </form>
+                {/form}
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

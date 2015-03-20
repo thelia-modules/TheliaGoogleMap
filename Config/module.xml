@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://thelia.net/schema/dic/module"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_1.xsd">
+    <fullnamespace>TheliaGoogleMap\TheliaGoogleMap</fullnamespace>
+    <descriptive locale="en_US">
+        <title>Thelia Google Map</title>
+        <subtitle>Module Google Map for Thelia</subtitle>
+        <description>This module integrate google map js api and google map js plugin for Thelia</description>
+    </descriptive>
+    <descriptive locale="fr_FR">
+        <title>Thelia Google Map</title>
+        <subtitle>Module Google Map pour Thelia</subtitle>
+        <description>Ce module integre les fichier de la google map api ainsi qu'un pulgin de creation de carte pour Thelia</description>
+    </descriptive>
+    <!-- <logo></logo> -->
+    <languages>
+        <language>en_US</language>
+        <language>fr_FR</language>
+    </languages>
+    <version>0.1</version>
+    <author>
+        <name>Penalver Antony</name>
+        <email>apenalver@openstudio.fr</email>
+    </author>
+    <type>classic</type>
+    <required>
+        <module version="&gt;=0.1">TheliaSmarty</module>
+    </required>
+    <thelia>2.1.0</thelia>
+    <stability>other</stability>
+</module>
