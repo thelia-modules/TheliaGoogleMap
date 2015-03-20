@@ -51,7 +51,12 @@
             if (this.markersrc) {
                 this.setupMarker();
             } else {
+                var marker = {
+                    title: "center",
+                    loc: [this.center[0], this.center[1]]
+                };
 
+                this.addMarker(marker);
             }
         }
     };
