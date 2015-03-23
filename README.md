@@ -59,7 +59,7 @@ Some template are integrate by default :
 | Name | Description | Key
 |---    |---    |---
 |Red | Demo template describe in google map documentation : https://developers.google.com/maps/documentation/javascript/examples/maptype-styled-simple | red
-|Black | Template black and with for classy map | black
+|Black | Template black and white for classy map | black
 
 ### Create your own template
 
@@ -95,6 +95,6 @@ Some template are integrate by default :
         }
     },
 ```
-* 4. Insert your js fil in ```main.after-javascript-include``` hook
+* 4. Insert your js file in ```main.after-javascript-include``` hook
 
 
