@@ -37,7 +37,7 @@ Somes options are availables :<br>
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
 |template-name  | String        | Used to set a template on map                                             | base
 |pin-link       | URL           | Used to set a custom pin                                                  | null
-|show           | Boolean       | Used to enable info window in map                                         | true
+|show-info      | Boolean       | Used to enable info window in map                                         | true
 
 ## 3. Marker Source
 
@@ -47,8 +47,12 @@ To use marker source you need to respect a format.<br>
 Json format :<br> 
 ```
    {
-    title : "TITLE MARKER"
-    loc : [ "LATITUDE" ,"LONGITUDE" ]
+    title : "TITLE MARKER",
+    loc : [ "LATITUDE" ,"LONGITUDE" ],
+    description : "DESCRIPTION",
+    info : "SOME INFORMATIONS,
+    link : "URL TO BIND BUTTON",
+    link-label : "LABEL FOR BUTTOM"
    }
 ```   
 
@@ -107,5 +111,6 @@ To customise info window you have to modify following css classes :
 * thelia-google-map-info
 * thelia-google-map-title
 * thelia-google-map-descp
+* thelia-google-map-link
 
 
