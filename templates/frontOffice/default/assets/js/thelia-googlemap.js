@@ -19,7 +19,8 @@
         zoomcontrol: true,
         scalecontrol: true,
         mousecontrol: false,
-        template: "base"
+        template: "base",
+        pin: null
     };
 
     /**
@@ -35,6 +36,7 @@
         this.scalecontrol = options.scalecontrol;
         this.template = options.template;
         this.marker = options.marker;
+        this.pin = options.pin;
         this.mousecontrol = options.mousecontrol;
         if (this.marker) {
             this.markersrc = options.markersrc;
@@ -129,11 +131,20 @@
 
     TheliaGoogleMap.prototype.addMarker = function (markerTab) {
         var myLatlng = new google.maps.LatLng(markerTab["loc"][0], markerTab["loc"][1]);
-        var marker = new google.maps.Marker({
+        var markerOpts = {
             position: myLatlng,
             map: this.map,
             title: markerTab["title"]
-        });
+        };
+
+        if (this.pin) {
+            var image = {
+                url: this.pin
+            };
+            markerOpts.icon = image;
+        }
+
+        var marker = new google.maps.Marker(markerOpts);
     };
 
     /**
@@ -224,6 +235,10 @@
 
             if ($map.attr("data-template")) {
                 opts.template = $map.attr("data-template");
+            }
+
+            if ($map.attr("data-pin")) {
+                opts.pin = $map.attr("data-pin");
             }
 
             if ($map.attr("data-marker")) {

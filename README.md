@@ -36,6 +36,7 @@ Somes options are availables :<br>
 |show-marker    | Boolean       | Used to enable showing markers                                            | true
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
 |template-name  | String        | Used to set a template on map                                             | base
+|pin-link       | URL           | Used to set a custom pin                                                  | null
 
 ## 3. Marker Source
 

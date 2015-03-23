@@ -99,6 +99,9 @@ class GoogleMap extends AbstractSmartyPlugin
             $templateName="base";
         }
 
+
+
+
         $div = '<div class="'.$class.'"'
             .' id="'.$id.'"'
             .' data-element="thelia-google-map"'
@@ -120,6 +123,11 @@ class GoogleMap extends AbstractSmartyPlugin
         $centerLon =  $this->getParam($params, 'center-lon');
         if (null != $centerLon && null != $centerLat) {
             $div .=' data-center="'.$centerLat.','.$centerLon.'"';
+        }
+
+        $pin =  $this->getParam($params, 'pin-link');
+        if (null != $pin) {
+            $div .= ' data-pin="'.$pin.'"';
         }
 
         $div .= '></div>';
