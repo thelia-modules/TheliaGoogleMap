@@ -51,7 +51,6 @@ class ConfigurationController extends BaseAdminController
 
             ConfigQuery::write(TheliaGoogleMap::CONF_API_KEY, $data["apikey"], false, true);
             $resp["message"] = $this->getTranslator()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
-
         } catch (\Exception $e) {
             $resp["error"] = 1;
             $resp["message"] = $e->getMessage();
@@ -60,5 +59,4 @@ class ConfigurationController extends BaseAdminController
 
         return JsonResponse::create($resp, $code);
     }
-
 }

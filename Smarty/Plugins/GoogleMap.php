@@ -20,7 +20,8 @@ use TheliaSmarty\Template\SmartyPluginDescriptor;
  * Class GoogleMap
  * @package TheliaGoogleMap\Smarty\Plugin
  */
-class GoogleMap extends AbstractSmartyPlugin {
+class GoogleMap extends AbstractSmartyPlugin
+{
 
     /**
      * @return an array of SmartyPluginDescriptor
@@ -39,7 +40,8 @@ class GoogleMap extends AbstractSmartyPlugin {
      * @return string
      */
 
-    public function getMap($params, $template = null){
+    public function getMap($params, $template = null)
+    {
         $class= $this->getParam($params, 'class');
 
         if (null == $class) {
@@ -64,7 +66,7 @@ class GoogleMap extends AbstractSmartyPlugin {
 
         $control =  $this->getParam($params, 'control');
         if (null == $control) {
-            $control=false;
+            $control="false";
         }
 
         $zoomControl =  $this->getParam($params, 'zoom-ctrl');
@@ -87,6 +89,11 @@ class GoogleMap extends AbstractSmartyPlugin {
             $marker=true;
         }
 
+        $mouseControl =  $this->getParam($params, 'mouse-ctrl');
+        if (null == $mouseControl) {
+            $mouseControl="false";
+        }
+
         $div = '<div class="'.$class.'"'
             .' id="'.$id.'"'
             .' data-element="thelia-google-map"'
@@ -95,6 +102,7 @@ class GoogleMap extends AbstractSmartyPlugin {
             .' data-zoomcontrol="'.$zoomControl.'"'
             .' data-pancontrol="'.$panControl.'"'
             .' data-scalecontrol="'.$scaleControl.'"'
+            .' data-mousecontrol="'.$mouseControl.'"'
             .' data-marker="'.$marker.'"';
 
         $markerSrc =  $this->getParam($params, 'marker-src');
