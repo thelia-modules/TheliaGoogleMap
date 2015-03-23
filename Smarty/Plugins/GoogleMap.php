@@ -91,7 +91,7 @@ class GoogleMap extends AbstractSmartyPlugin
 
         $mouseControl =  $this->getParam($params, 'mouse-ctrl');
         if (null == $mouseControl) {
-            $mouseControl="false";
+            $mouseControl=false;
         }
 
         $templateName =  $this->getParam($params, 'template-name');
@@ -128,6 +128,11 @@ class GoogleMap extends AbstractSmartyPlugin
         $pin =  $this->getParam($params, 'pin-link');
         if (null != $pin) {
             $div .= ' data-pin="'.$pin.'"';
+        }
+
+        $showInfo =  $this->getParam($params, 'show-info');
+        if (null != $showInfo) {
+            $div .= ' data-show-info="'.$showInfo.'"';
         }
 
         $div .= '></div>';

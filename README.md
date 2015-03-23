@@ -37,6 +37,7 @@ Somes options are availables :<br>
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
 |template-name  | String        | Used to set a template on map                                             | base
 |pin-link       | URL           | Used to set a custom pin                                                  | null
+|show           | Boolean       | Used to enable info window in map                                         | true
 
 ## 3. Marker Source
 
@@ -97,5 +98,14 @@ Some template are integrate by default :
     },
 ```
 * 4. Insert your js file in ```main.after-javascript-include``` hook
+
+## 5. Info Window
+
+To customise info window you have to modify following css classes :
+
+* thelia-google-map-info-window
+* thelia-google-map-info
+* thelia-google-map-title
+* thelia-google-map-descp
 
 

@@ -20,7 +20,8 @@
         scalecontrol: true,
         mousecontrol: false,
         template: "base",
-        pin: null
+        pin: null,
+        showInfo: true
     };
 
     /**
@@ -37,6 +38,7 @@
         this.template = options.template;
         this.marker = options.marker;
         this.pin = options.pin;
+        this.showInfo = options.showInfo;
         this.mousecontrol = options.mousecontrol;
         if (this.marker) {
             this.markersrc = options.markersrc;
@@ -76,11 +78,14 @@
             center: {lat: this.center[0], lng: this.center[1]},
             zoom: this.zoom,
             disableDefaultUI: this.controls,
-            panControl: this.pancontrol,
-            zoomControl: this.zoomcontrol,
-            scaleControl: this.scalecontrol,
             scrollwheel: this.mousecontrol
         };
+
+        if (this.controls == false) {
+            this.mapOptions.panControl = this.pancontrol;
+            this.mapOptions.zoomControl = this.zoomcontrol;
+            this.mapOptions.scaleControl = this.scalecontrol;
+        }
 
         if (this.template !== "base") {
             this.mapOptions.mapTypeControlOptions = {
@@ -125,7 +130,27 @@
 
     TheliaGoogleMap.prototype.placeMarker = function () {
         for (var i in this.markerData) {
-            this.addMarker(this.markerData[i]);
+            var marker = this.addMarker(this.markerData[i]);
+
+            if (this.showInfo) {
+                if (!this.windowsContent) {
+                    this.windowsContent = [];
+                }
+
+                if (!this.infoWindow) {
+                    this.infowindow = new google.maps.InfoWindow();
+                }
+                this.windowsContent.push(generateInfoWindowString(this.markerData[i]));
+                var that = this;
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+
+                        that.infowindow.setContent(that.windowsContent[i]);
+                        that.infowindow.open(this.getMap(), marker);
+                    }
+                })(marker, i));
+
+            }
         }
     };
 
@@ -134,7 +159,7 @@
         var markerOpts = {
             position: myLatlng,
             map: this.map,
-            title: markerTab["title"]
+            title: markerTab.title
         };
 
         if (this.pin) {
@@ -144,8 +169,29 @@
             markerOpts.icon = image;
         }
 
-        var marker = new google.maps.Marker(markerOpts);
+        return new google.maps.Marker(markerOpts);
+
     };
+
+    function generateInfoWindowString(marker) {
+        var infoWindow = '<div class="thelia-google-map-info-window">' +
+            '<div class="thelia-google-map-title">' + marker.title + '</div>';
+        if (marker.info) {
+            infoWindow += '<div class="thelia-google-map-info">' + marker.info + '</div>';
+        }
+
+        if (marker.description) {
+            infoWindow += '<div class="thelia-google-map-descp">' + marker.description + '</div>';
+        }
+
+        if (marker.link) {
+            infoWindow += '<a class="thelia-google-map-link" href="' + marker.link + '">' + marker["link-label"] + '</a>';
+        }
+
+        infoWindow += "</div>";
+
+        return infoWindow;
+    }
 
     /**
      * ERROR HANDLER
@@ -194,6 +240,14 @@
     // Thelia Google Map PLUGIN INIT
     // ==========================
 
+    function formalizeReturn(string) {
+        if (string === 0 || string === "false" || string === "0" || string === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     $(window).on("load", function () {
         $('[data-element="thelia-google-map"]').each(function () {
             var $map = $(this);
@@ -214,23 +268,24 @@
             }
 
             if ($map.attr("data-control")) {
-                opts.controls = $map.attr("data-control");
+                opts.controls = formalizeReturn($map.attr("data-control"));
+
             }
 
             if ($map.attr("data-pancontrol")) {
-                opts.pancontrol = $map.attr("data-pancontrol");
+                opts.pancontrol = formalizeReturn($map.attr("data-pancontrol"));
             }
 
             if ($map.attr("data-zoomcontrol")) {
-                opts.zoomcontrol = $map.attr("data-zoomcontrol");
+                opts.zoomcontrol = formalizeReturn($map.attr("data-zoomcontrol"));
             }
 
             if ($map.attr("data-scalecontrol")) {
-                opts.scalecontrol = $map.attr("data-scalecontrol");
+                opts.scalecontrol = formalizeReturn($map.attr("data-scalecontrol"));
             }
 
             if ($map.attr("data-mousecontrol")) {
-                opts.mousecontrol = $map.attr("data-mousecontrol");
+                opts.mousecontrol = formalizeReturn($map.attr("data-mousecontrol"));
             }
 
             if ($map.attr("data-template")) {
@@ -241,9 +296,13 @@
                 opts.pin = $map.attr("data-pin");
             }
 
+            if ($map.attr("data-show-info")) {
+                opts.showInfo = formalizeReturn($map.attr("data-show-info"));
+            }
+
             if ($map.attr("data-marker")) {
-                opts.marker = $map.attr("data-marker");
-                if ($map.attr("data-src")) {
+                opts.marker = formalizeReturn($map.attr("data-marker"));
+                if ($map.attr("data-src") && opts.marker === true) {
                     opts.markersrc = $map.attr("data-src");
                 }
             }
