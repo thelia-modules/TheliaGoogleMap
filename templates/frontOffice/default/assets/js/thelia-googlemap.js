@@ -17,7 +17,9 @@
         controls: true,
         pancontrol: true,
         zoomcontrol: true,
-        scalecontrol: true
+        scalecontrol: true,
+        mousecontrol: false,
+        template: "base"
     };
 
     /**
@@ -31,7 +33,9 @@
         this.pancontrol = options.pancontrol;
         this.zoomcontrol = options.zoomcontrol;
         this.scalecontrol = options.scalecontrol;
+        this.template = options.template;
         this.marker = options.marker;
+        this.mousecontrol = options.mousecontrol;
         if (this.marker) {
             this.markersrc = options.markersrc;
         }
@@ -46,6 +50,10 @@
         this.generateOptionMap();
         this.map = new google.maps.Map(document.getElementById(this.$element.attr("id")),
             this.mapOptions);
+
+        if (this.template !== "base") {
+            this.setTemplate();
+        }
 
         if (this.marker) {
             if (this.markersrc) {
@@ -68,9 +76,26 @@
             disableDefaultUI: this.controls,
             panControl: this.pancontrol,
             zoomControl: this.zoomcontrol,
-            scaleControl: this.scalecontrol
+            scaleControl: this.scalecontrol,
+            scrollwheel: this.mousecontrol
         };
 
+        if (this.template !== "base") {
+            this.mapOptions.mapTypeControlOptions = {
+                mapTypeIds: [google.maps.MapTypeId.ROADMAP, this.template + this.$element.attr("id")]
+            };
+            this.mapOptions.mapTypeId = this.template + this.$element.attr("id");
+        }
+
+    };
+
+    TheliaGoogleMap.prototype.setTemplate = function () {
+        var featureOpts = theliaGoogleMapTemplate[this.template]["featureOpts"];
+        var styledMapOptions = theliaGoogleMapTemplate[this.template]["styledMapOptions"];
+
+        var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
+
+        this.map.mapTypes.set(this.template + this.$element.attr("id"), customMapType);
     };
 
     /**
@@ -191,6 +216,14 @@
 
             if ($map.attr("data-scalecontrol")) {
                 opts.scalecontrol = $map.attr("data-scalecontrol");
+            }
+
+            if ($map.attr("data-mousecontrol")) {
+                opts.mousecontrol = $map.attr("data-mousecontrol");
+            }
+
+            if ($map.attr("data-template")) {
+                opts.template = $map.attr("data-template");
             }
 
             if ($map.attr("data-marker")) {

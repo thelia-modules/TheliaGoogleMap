@@ -94,6 +94,11 @@ class GoogleMap extends AbstractSmartyPlugin
             $mouseControl="false";
         }
 
+        $templateName =  $this->getParam($params, 'template-name');
+        if (null == $templateName) {
+            $templateName="base";
+        }
+
         $div = '<div class="'.$class.'"'
             .' id="'.$id.'"'
             .' data-element="thelia-google-map"'
@@ -103,6 +108,7 @@ class GoogleMap extends AbstractSmartyPlugin
             .' data-pancontrol="'.$panControl.'"'
             .' data-scalecontrol="'.$scaleControl.'"'
             .' data-mousecontrol="'.$mouseControl.'"'
+            .' data-template="'.$templateName.'"'
             .' data-marker="'.$marker.'"';
 
         $markerSrc =  $this->getParam($params, 'marker-src');

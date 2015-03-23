@@ -32,8 +32,10 @@ Somes options are availables :<br>
 |zoom-ctrl      | Boolean       | Used to enable zoom control UI                                            | true
 |pan-ctrl       | Boolean       | Used to enable pan control UI                                             | true
 |scale-ctrl     | Boolean       | Used to enable scale control UI                                           | true
+|mouse-ctrl     | Boolean       | Used to enable mouse control                                              | false
 |show-marker    | Boolean       | Used to enable showing markers                                            | true
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
+|template-name  | String        | Used to set a template on map                                             | base
 
 ## 3. Marker Source
 
@@ -46,4 +48,53 @@ Json format :<br>
     title : "TITLE MARKER"
     loc : [ "LATITUDE" ,"LONGITUDE" ]
    }
-```   
+``   
+
+## 4. Templating
+
+### Template list
+
+Some template are integrate by default :
+
+| Name | Description | Key
+|---    |---    |---
+|Red | Demo template describe in google map documentation : https://developers.google.com/maps/documentation/javascript/examples/maptype-styled-simple | red
+|Black | Template black and with for classy map | black
+
+### Create your own template
+
+* 1. Create a js file 
+* 2. Get theliaGoogleMapTemplate variable
+* 3. Insert your template like this:
+```
+    "red": {
+        "featureOpts": [
+            {
+                stylers: [
+                    {hue: '#890000'},
+                    {visibility: 'simplified'},
+                    {gamma: 0.5},
+                    {weight: 0.5}
+                ]
+            },
+            {
+                elementType: 'labels',
+                stylers: [
+                    {visibility: 'off'}
+                ]
+            },
+            {
+                featureType: 'water',
+                stylers: [
+                    {color: '#890000'}
+                ]
+            }
+        ],
+        "styledMapOptions": {
+            name: "Red Template"
+        }
+    },
+```
+* 4. Insert your js fil in ```main.after-javascript-include``` hook
+
+
