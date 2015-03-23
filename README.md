@@ -48,7 +48,7 @@ Json format :<br>
     title : "TITLE MARKER"
     loc : [ "LATITUDE" ,"LONGITUDE" ]
    }
-``   
+```   
 
 ## 4. Templating
 
