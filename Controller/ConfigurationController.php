@@ -18,41 +18,47 @@ use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\ConfigQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use TheliaGoogleMap\Form\ConfigurationForm;
 
 /**
  * Class Configuration
  */
-class ConfigurationController extends BaseAdminController {
+class ConfigurationController extends BaseAdminController
+{
 
     /**
      * Methode used to save API Key for google map in Config
      * @return mixed|null|\Symfony\Component\HttpFoundation\Response|static
      */
-    public function saveAction(){
-        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array('theliagooglemap'), AccessManager::UPDATE)) {
+    public function saveAction()
+    {
+        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array('theliagooglemap'),
+                AccessManager::UPDATE)
+        ) {
             return $response;
         }
 
-        $form = new \TheliaGoogleMap\Form\ConfigurationForm($this->getRequest());
+        $form = new ConfigurationForm($this->getRequest());
         $resp = array(
-            "error" =>  0,
             "message" => ""
         );
-        $response=null;
+        $code = 200;
+        $response = null;
 
         try {
             $vform = $this->validateForm($form);
             $data = $vform->getData();
 
             ConfigQuery::write(TheliaGoogleMap::CONF_API_KEY, $data["apikey"], false, true);
-            $resp["message"] = $this->getTranslator()->trans("API Key saved",[],TheliaGoogleMap::MESSAGE_DOMAIN);
+            $resp["message"] = $this->getTranslator()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
 
         } catch (\Exception $e) {
             $resp["error"] = 1;
             $resp["message"] = $e->getMessage();
+            $code = 500;
         }
 
-        return JsonResponse::create($resp);
+        return JsonResponse::create($resp, $code);
     }
 
 }
