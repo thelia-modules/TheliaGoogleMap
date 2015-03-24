@@ -45,6 +45,7 @@ class MapFrontHook extends BaseHook
 
         if ($api_key) {
             $event->add($this->render("googleJS.html", ["API_KEY" => $api_key]));
+            $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
             $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
         } else {
             Tlog::getInstance()->error("API KEY not set");

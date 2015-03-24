@@ -175,6 +175,7 @@
 
     function generateInfoWindowString(marker) {
         var infoWindow = '<div class="thelia-google-map-info-window">' +
+
             '<div class="thelia-google-map-title">' + marker.title + '</div>';
         if (marker.info) {
             infoWindow += '<div class="thelia-google-map-info">' + marker.info + '</div>';
@@ -302,6 +303,7 @@
 
             if ($map.attr("data-marker")) {
                 opts.marker = formalizeReturn($map.attr("data-marker"));
+
                 if ($map.attr("data-src") && opts.marker === true) {
                     opts.markersrc = $map.attr("data-src");
                 }
