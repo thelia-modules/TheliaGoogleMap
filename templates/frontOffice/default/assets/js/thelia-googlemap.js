@@ -21,7 +21,11 @@
         mousecontrol: false,
         template: "base",
         pin: null,
-        showInfo: true
+        showInfo: true,
+        clustered: false,
+        clusterGridWidth: 10,
+        clusterGridHeight: 10,
+        pincluster: null
     };
 
     /**
@@ -40,6 +44,10 @@
         this.pin = options.pin;
         this.showInfo = options.showInfo;
         this.mousecontrol = options.mousecontrol;
+        this.clustered = options.clustered;
+        this.clusterGridWidth = options.clusterGridWidth;
+        this.clusterGridHeight = options.clusterGridHeight;
+        this.pincluster = options.pincluster;
         if (this.marker) {
             this.markersrc = options.markersrc;
         }
@@ -69,6 +77,16 @@
                 };
 
                 this.addMarker(marker);
+            }
+
+            if (this.clustered) {
+                var that = this;
+                google.maps.event.addListener(this.map, 'zoom_changed', function () {
+                    that.placeClusteredMarker();
+                });
+                google.maps.event.addListener(this.map, 'bounds_changed', function () {
+                    that.placeClusteredMarker();
+                });
             }
         }
     };
@@ -129,30 +147,27 @@
     };
 
     TheliaGoogleMap.prototype.placeMarker = function () {
-        for (var i in this.markerData) {
-            var marker = this.addMarker(this.markerData[i]);
 
-            if (this.showInfo) {
-                if (!this.windowsContent) {
-                    this.windowsContent = [];
+        if (this.clustered) {
+            this.placeClusteredMarker();
+        } else {
+            if (this.markers) {
+                this.removeMarkers();
+            }
+            this.markers = [];
+            this.windowsContent = [];
+
+            for (var i in this.markerData) {
+                var marker = this.addMarker(this.markerData[i]);
+
+                if (this.showInfo) {
+                    this.addInfoWindow(marker, i);
                 }
-
-                if (!this.infoWindow) {
-                    this.infowindow = new google.maps.InfoWindow();
-                }
-                this.windowsContent.push(generateInfoWindowString(this.markerData[i]));
-                var that = this;
-                google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                    return function () {
-
-                        that.infowindow.setContent(that.windowsContent[i]);
-                        that.infowindow.open(this.getMap(), marker);
-                    }
-                })(marker, i));
-
             }
         }
+
     };
+
 
     TheliaGoogleMap.prototype.addMarker = function (markerTab) {
         var myLatlng = new google.maps.LatLng(markerTab["loc"][0], markerTab["loc"][1]);
@@ -169,8 +184,201 @@
             markerOpts.icon = image;
         }
 
-        return new google.maps.Marker(markerOpts);
+        var marker = new google.maps.Marker(markerOpts);
 
+        this.markers.push(marker);
+
+        return marker;
+
+    };
+
+
+    TheliaGoogleMap.prototype.placeClusteredMarker = function () {
+        if (this.markers) {
+            this.removeMarkers();
+        }
+        this.markers = [];
+        this.markersClustered = [];
+        this.windowsContent = [];
+
+        // Délimitation de la map
+        var mapBounds = this.map.getBounds();
+        // coordonnées SW de la map (sur la taille du div id = "map")
+        var sw = mapBounds.getSouthWest();
+        // coordonnées NE de la map (sur la taille du div id = "map")
+        var ne = mapBounds.getNorthEast();
+        // Size est une aire représentant les dimensions du rectangle de la map en degrés
+        var size = mapBounds.toSpan(); //retourne un objet GLatLng
+
+        // créé une cellule de 10x10 pour constituer notre "grille"
+        // les cellules de cette grille sont ici affichées en bleu
+        var gridWidth = this.clusterGridWidth;
+        var gridHeight = this.clusterGridHeight;
+
+        var gridCellSizeLat = size.lat() / gridWidth;
+        var gridCellSizeLng = size.lng() / gridHeight;
+        // cellGrid représente un tableau qui contiendra l'ensemble
+        // des cellules dans lesquelles se trouveront des points
+        // - dans notre exemple, nous aurons 19 cellules (rectangles bleus)
+        this.cellGrid = [];
+
+        //Parcourt l'ensemble des points et les assigne à la cellule concernée
+        for (var k in this.markerData) {
+            var latlng = new google.maps.LatLng(this.markerData[k]["loc"][0], this.markerData[k]["loc"][1]);
+
+            // on vérifie si le point appartient à notre zone
+            // la zone correspond à la map totale affichée
+            // si le point n'appartient pas la map en cours on passe au point siuvant
+            if (!mapBounds.contains(latlng)) continue;
+
+            // On créé un rectangle temporaire en fonction des coordonnées
+            // du point et de celles de la map afin d'obtenir notre cellule (cell)
+            var testBounds = new google.maps.LatLngBounds(sw, latlng);
+            var testSize = testBounds.toSpan();
+            var i = Math.ceil(testSize.lat() / gridCellSizeLat);
+            var j = Math.ceil(testSize.lng() / gridCellSizeLng);
+            // cell peut être comparée à une case d'échiquier
+            var cell = [i, j];
+
+            // Si cette case (cellule) n'a pas encore été créée (undefined)
+            // on l'ajoute à notre grille ( = tableau de cellules = échiquier)
+            if (typeof this.cellGrid[cell] == 'undefined') {
+
+                var lat_cellSW = sw.lat() + ((i - 1) * gridCellSizeLat);
+                var lng_cellSW = sw.lng() + ((j - 1) * gridCellSizeLng);
+                // coordonnées sud-ouest de notre cellule
+                var cellSW = new google.maps.LatLng(lat_cellSW, lng_cellSW);
+
+                var lat_cellNE = cellSW.lat() + gridCellSizeLat
+                var lng_cellNE = cellSW.lng() + gridCellSizeLng;
+                // coordonnées nord-est de notre cellule
+                var cellNE = new google.maps.LatLng(lat_cellNE, lng_cellNE);
+
+                // Déclaration de la cellule et de ses propriétés (cluster ou non, points ...)
+                this.cellGrid[cell] = {
+                    GLatLngBounds: new google.maps.LatLngBounds(cellSW, cellNE),
+                    cluster: false,
+                    markers: [], lt: [], lg: [], titre: [], adresse: [], image: [], data: [],
+                    length: 0
+                };
+            }
+
+            // augmentation du nombre de cellules sur la grille ( = 1 cellule en plus)
+            this.cellGrid[cell].length++;
+
+            // augmentation du nombre de cellules sur la grille ( = 1 cellule en plus)
+            this.cellGrid[cell].length++;
+
+            // Si la cellule contient au moins 2 points, nous décidons ici
+            // que les markers seront clustérisés pour cette cellule
+            if (this.cellGrid[cell].markers.length > 1)
+            // On passe alors à true la propriété cluster de la cellule
+                this.cellGrid[cell].cluster = true;
+
+            // On lui renseigne ensuite les propriétés du point concerné
+            this.cellGrid[cell].lt.push(this.markerData[k].lat);
+            this.cellGrid[cell].lg.push(this.markerData[k].lng);
+            this.cellGrid[cell].markers.push(latlng);
+            this.cellGrid[cell].titre.push(this.markerData[k].title);
+            this.cellGrid[cell].data.push(this.markerData[k]);
+        }
+
+        // On parcourt l'ensemble des cellules de notre grille (cases de l'échiquier)
+        for (var k in this.cellGrid) {
+            // Si les markers de la cellule doivent apparaître sous forme de cluster
+            if (this.cellGrid[k].cluster == true) {
+                // création d'un marker au centre de la cellule
+                var span = this.cellGrid[k].GLatLngBounds.toSpan();
+                var sw = this.cellGrid[k].GLatLngBounds.getSouthWest();
+                var swLAT_span = sw.lat() + (span.lat() / 2);
+                var swLNG_span = sw.lng() + (span.lng() / 2);
+
+                var markerOpts = {
+                    position: new google.maps.LatLng(swLAT_span, swLNG_span),
+                    map: this.map,
+                    title: this.cellGrid[k].titre[0]
+                };
+
+                if (this.pincluster) {
+                    var image = {
+                        url: this.pincluster
+                    };
+                    markerOpts.icon = image;
+                }
+
+                var marker = new google.maps.Marker(markerOpts);
+
+                this.markersClustered.push(marker);
+            } else {
+                // Sinon, création d'un marker simple
+                for (i in this.cellGrid[k].markers) {
+                    var markerOpts = {
+                        position: this.cellGrid[k].markers[i],
+                        map: this.map,
+                        title: this.cellGrid[k].titre[i]
+                    };
+
+                    if (this.pin) {
+                        var image = {
+                            url: this.pin
+                        };
+                        markerOpts.icon = image;
+                    }
+
+                    var marker = new google.maps.Marker(markerOpts);
+
+                    this.markers.push(marker);
+                    if (this.showInfo) {
+                        this.addClusteredInfoWindow(marker, k, this.cellGrid[k].data[i]);
+                    }
+                }
+
+            }
+        }
+
+    };
+
+    TheliaGoogleMap.prototype.addClusteredInfoWindow = function (marker, i, data) {
+        if (!this.infoWindow) {
+            this.infowindow = new google.maps.InfoWindow();
+        }
+        this.windowsContent[i] = (generateInfoWindowString(data));
+        var that = this;
+        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+            return function () {
+
+                that.infowindow.setContent(that.windowsContent[i]);
+                that.infowindow.open(this.getMap(), marker);
+            }
+        })(marker, i));
+
+    };
+
+    TheliaGoogleMap.prototype.removeMarkers = function () {
+        for (var i in this.markers) {
+            this.markers[i].setMap(null);
+        }
+
+        for (var i in this.markersClustered) {
+            this.markersClustered[i].setMap(null);
+        }
+    };
+
+
+    TheliaGoogleMap.prototype.addInfoWindow = function (marker, i) {
+
+        if (!this.infoWindow) {
+            this.infowindow = new google.maps.InfoWindow();
+        }
+        this.windowsContent[i] = (generateInfoWindowString(this.markerData[i]));
+        var that = this;
+        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+            return function () {
+
+                that.infowindow.setContent(that.windowsContent[i]);
+                that.infowindow.open(this.getMap(), marker);
+            }
+        })(marker, i));
     };
 
     function generateInfoWindowString(marker) {
@@ -262,8 +470,9 @@
             if ($map.attr("data-center")) {
                 var str = $map.attr("data-center");
                 var center = str.split(",");
-
                 if (center.length > 1) {
+                    center[0] = parseFloat(center[0]);
+                    center[1] = parseFloat(center[1]);
                     opts.center = center;
                 }
             }
@@ -289,12 +498,28 @@
                 opts.mousecontrol = formalizeReturn($map.attr("data-mousecontrol"));
             }
 
+            if ($map.attr("data-cluster")) {
+                opts.clustered = formalizeReturn($map.attr("data-cluster"));
+                if (opts.clustered) {
+                    if ($map.attr("data-cluster-grid-width")) {
+                        opts.clusterGridWidth = parseInt($map.attr("data-cluster-grid-width"));
+                    }
+                    if ($map.attr("data-cluster-grid-height")) {
+                        opts.clusterGridHeight = parseInt($map.attr("data-cluster-grid-height"));
+                    }
+                }
+            }
+
             if ($map.attr("data-template")) {
                 opts.template = $map.attr("data-template");
             }
 
             if ($map.attr("data-pin")) {
                 opts.pin = $map.attr("data-pin");
+            }
+
+            if ($map.attr("data-cluster-pin")) {
+                opts.pincluster = $map.attr("data-cluster-pin");
             }
 
             if ($map.attr("data-show-info")) {

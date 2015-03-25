@@ -43,7 +43,6 @@ class ConfigurationController extends BaseAdminController
             "message" => ""
         );
         $code = 200;
-        $response = null;
 
         try {
             $vform = $this->validateForm($form);
@@ -52,7 +51,6 @@ class ConfigurationController extends BaseAdminController
             ConfigQuery::write(TheliaGoogleMap::CONF_API_KEY, $data["apikey"], false, true);
             $resp["message"] = $this->getTranslator()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
         } catch (\Exception $e) {
-            $resp["error"] = 1;
             $resp["message"] = $e->getMessage();
             $code = 500;
         }

@@ -38,6 +38,10 @@ Somes options are availables :<br>
 |template-name  | String        | Used to set a template on map                                             | base
 |pin-link       | URL           | Used to set a custom pin                                                  | null
 |show-info      | Boolean       | Used to enable info window in map                                         | true
+|cluster        | Boolean       | Used to enable clustering for markers                                     | false
+|cluster-grid-width  | Integer  | Width size grid for cluster element                                       | 10
+|cluster-grid-height | Integer  | Height size grid for cluster element                                      | 10
+|pin-cluster-link    | URL      | Used to set a custom pin for cluster marker                               | null
 
 ## 3. Marker Source
 

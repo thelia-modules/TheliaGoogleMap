@@ -130,9 +130,29 @@ class GoogleMap extends AbstractSmartyPlugin
             $div .= ' data-pin="'.$pin.'"';
         }
 
+        $pinCluster =  $this->getParam($params, 'pin-cluster-link');
+        if (null != $pinCluster) {
+            $div .= ' data-cluster-pin="'.$pinCluster.'"';
+        }
+
         $showInfo =  $this->getParam($params, 'show-info');
         if (null != $showInfo) {
             $div .= ' data-show-info="'.$showInfo.'"';
+        }
+
+        $cluster = $this->getParam($params,'cluster');
+        if (null != $cluster) {
+            $div .= ' data-cluster="'.$cluster.'"';
+        }
+
+        $clusterWidth = $this->getParam($params,'cluster-grid-width');
+        if (null != $clusterWidth) {
+            $div .= ' data-cluster-grid-width="'.$clusterWidth.'"';
+        }
+
+        $clusterHeight = $this->getParam($params,'cluster-grid-height');
+        if (null != $clusterHeight) {
+            $div .= ' data-cluster-grid-height="'.$clusterHeight.'"';
         }
 
         $div .= '></div>';
