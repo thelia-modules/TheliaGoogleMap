@@ -290,8 +290,16 @@
                 // création d'un marker au centre de la cellule
                 var span = this.cellGrid[k].GLatLngBounds.toSpan();
                 var sw = this.cellGrid[k].GLatLngBounds.getSouthWest();
-                var swLAT_span = sw.lat() + (span.lat() / 2);
-                var swLNG_span = sw.lng() + (span.lng() / 2);
+                var swLAT_span = 0;
+                var swLNG_span = 0;
+
+                for (var i in this.cellGrid[k].markers) {
+                    swLAT_span += this.cellGrid[k].markers[i].lat();
+                    swLNG_span += this.cellGrid[k].markers[i].lng();
+                }
+
+                swLAT_span = swLAT_span/this.cellGrid[k].markers.length;
+                swLNG_span = swLNG_span/this.cellGrid[k].markers.length;
 
                 var markerOpts = {
                     position: new google.maps.LatLng(swLAT_span, swLNG_span),
@@ -311,7 +319,7 @@
                 this.markersClustered.push(marker);
             } else {
                 // Sinon, création d'un marker simple
-                for (i in this.cellGrid[k].markers) {
+                for (var i in this.cellGrid[k].markers) {
                     var markerOpts = {
                         position: this.cellGrid[k].markers[i],
                         map: this.map,

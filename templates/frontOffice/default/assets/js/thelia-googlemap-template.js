@@ -30,7 +30,7 @@ var theliaGoogleMapTemplate = {
             name: "Red Template"
         }
     },
-    "black" : {
+    "blackSimple" : {
         "featureOpts": [
             {
                 stylers: [
@@ -52,6 +52,35 @@ var theliaGoogleMapTemplate = {
                 elementType: "labels",
                 stylers: [
                     { visibility: "off" }
+                ]
+            }
+        ],
+        "styleMapOptions" : {
+            name: "Black Template"
+        }
+    },
+    "black" : {
+        "featureOpts": [
+            {
+                stylers: [
+                    { "saturation": -100 },
+                    { "lightness": -8 },
+                    { "gamma": 1.18 }
+                ]
+            },
+            {
+                featureType: "road",
+                elementType: "geometry",
+                stylers: [
+                    { lightness: 100 },
+                    { visibility: "on" }
+                ]
+            },
+            {
+                featureType: "road",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "on" }
                 ]
             }
         ],
