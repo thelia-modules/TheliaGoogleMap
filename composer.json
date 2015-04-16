@@ -3,7 +3,7 @@
     "license": "LGPL-3.0+",
     "type": "thelia-module",
     "authors":[
-    	"name": "Penalver Antony"
+    	{"name":"Penalver Antony"}
     ],
     "require": {
         "thelia/installer": "~1.1"
