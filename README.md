@@ -14,6 +14,13 @@ This module allow to integrate a google map with somes options.
 Warning : You need to configure your google api keys for google maps in configuration form before to use it.<br>
 To get api key follow these instructions : https://developers.google.com/maps/documentation/javascript/tutorial
 
+### Composer
+Add it in your main thelia composer.json file
+
+```
+composer require thelia/thelia-googlemap-module:~1.0
+```
+
 ## 2. Usage
 
 
