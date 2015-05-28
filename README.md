@@ -1,4 +1,4 @@
-# Thelia Google Map V0.1
+# Thelia Google Map
 
 
 author : Penalver Antony <apenalver@openstudio.fr>

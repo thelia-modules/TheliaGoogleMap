@@ -315,7 +315,11 @@
                 }
 
                 var marker = new google.maps.Marker(markerOpts);
-
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    var thismap = this.getMap();
+                    thismap.setZoom(thismap.getZoom()+2);
+                    thismap.panTo(marker.latLng);
+                }));
                 this.markersClustered.push(marker);
             } else {
                 // Sinon, création d'un marker simple
