@@ -35,6 +35,7 @@ Somes options are availables :<br>
 |zoom           | Integer       | Allow to change base map zoom                                             | 0
 |centerlat      | Float         | Used to set the latitude for base center map ( need centerLon to be set ) | 0
 |centerlon      | Float         | Used to set the longitude for base center map ( need centerLat to be set )| 0
+|address        | String        | Used to set the center point for map                                      | null
 |control        | Boolean       | Used to disable default control UI                                        | false
 |zoom-ctrl      | Boolean       | Used to enable zoom control UI                                            | true
 |pan-ctrl       | Boolean       | Used to enable pan control UI                                             | true

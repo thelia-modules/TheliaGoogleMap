@@ -13,6 +13,7 @@
 
     TheliaGoogleMap.DEFAULTS = {
         center: [0, 0],
+        address: null,
         zoom: 0,
         controls: true,
         pancontrol: true,
@@ -34,6 +35,7 @@
 
     TheliaGoogleMap.prototype.optionsInit = function (options) {
         this.center = options.center;
+        this.address = options.address;
         this.zoom = options.zoom;
         this.controls = options.controls;
         this.pancontrol = options.pancontrol;
@@ -41,6 +43,7 @@
         this.scalecontrol = options.scalecontrol;
         this.template = options.template;
         this.marker = options.marker;
+        this.markers = [];
         this.pin = options.pin;
         this.showInfo = options.showInfo;
         this.mousecontrol = options.mousecontrol;
@@ -59,41 +62,64 @@
      */
 
     TheliaGoogleMap.prototype.setup = function () {
-        this.generateOptionMap();
-        this.map = new google.maps.Map(document.getElementById(this.$element.attr("id")),
-            this.mapOptions);
+        var that = this;
+        if (this.address) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({address: this.address}, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
 
-        if (this.template !== "base") {
-            this.setTemplate();
+                    that.center = results[0].geometry.location;
+                    generateMap(that);
+
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        } else {
+            this.center = {lat: this.center[0], lng: this.center[1]};
+            generateMap(this);
         }
 
-        if (this.marker) {
-            if (this.markersrc) {
-                this.setupMarker();
+
+    };
+
+    var generateMap = function (object) {
+        object.generateOptionMap();
+        object.map = new google.maps.Map(document.getElementById(object.$element.attr("id")),
+            object.mapOptions);
+
+        if (object.template !== "base") {
+            object.setTemplate();
+        }
+
+        if (object.marker) {
+            if (object.markersrc) {
+                object.setupMarker();
             } else {
                 var marker = {
                     title: "center",
-                    loc: [this.center[0], this.center[1]]
+                    loc: object.center
                 };
 
-                this.addMarker(marker);
+                object.addMarkerFromLatLn(marker);
             }
 
-            if (this.clustered) {
-                var that = this;
-                google.maps.event.addListener(this.map, 'zoom_changed', function () {
+            if (object.clustered) {
+                var that = object;
+                google.maps.event.addListener(object.map, 'zoom_changed', function () {
                     that.placeClusteredMarker();
                 });
-                google.maps.event.addListener(this.map, 'bounds_changed', function () {
+                google.maps.event.addListener(object.map, 'bounds_changed', function () {
                     that.placeClusteredMarker();
                 });
             }
         }
     };
 
+
     TheliaGoogleMap.prototype.generateOptionMap = function () {
         this.mapOptions = {
-            center: {lat: this.center[0], lng: this.center[1]},
+            center: this.center,
             zoom: this.zoom,
             disableDefaultUI: this.controls,
             scrollwheel: this.mousecontrol
@@ -113,6 +139,7 @@
         }
 
     };
+
 
     TheliaGoogleMap.prototype.setTemplate = function () {
         var featureOpts = theliaGoogleMapTemplate[this.template]["featureOpts"];
@@ -191,6 +218,27 @@
         return marker;
 
     };
+
+    TheliaGoogleMap.prototype.addMarkerFromLatLn = function (markerTab) {
+        var markerOpts = {
+            position: markerTab["loc"],
+            map: this.map,
+            title: markerTab.title
+        };
+
+        if (this.pin) {
+            var image = {
+                url: this.pin
+            };
+            markerOpts.icon = image;
+        }
+
+        var marker = new google.maps.Marker(markerOpts);
+
+        this.markers.push(marker);
+
+        return marker;
+    }
 
 
     TheliaGoogleMap.prototype.placeClusteredMarker = function () {
@@ -298,8 +346,8 @@
                     swLNG_span += this.cellGrid[k].markers[i].lng();
                 }
 
-                swLAT_span = swLAT_span/this.cellGrid[k].markers.length;
-                swLNG_span = swLNG_span/this.cellGrid[k].markers.length;
+                swLAT_span = swLAT_span / this.cellGrid[k].markers.length;
+                swLNG_span = swLNG_span / this.cellGrid[k].markers.length;
 
                 var markerOpts = {
                     position: new google.maps.LatLng(swLAT_span, swLNG_span),
@@ -317,7 +365,7 @@
                 var marker = new google.maps.Marker(markerOpts);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     var thismap = this.getMap();
-                    thismap.setZoom(thismap.getZoom()+2);
+                    thismap.setZoom(thismap.getZoom() + 2);
                     thismap.panTo(marker.latLng);
                 }));
                 this.markersClustered.push(marker);
@@ -524,6 +572,10 @@
 
             if ($map.attr("data-template")) {
                 opts.template = $map.attr("data-template");
+            }
+
+            if ($map.attr("data-address")) {
+                opts.address = $map.attr("data-address");
             }
 
             if ($map.attr("data-pin")) {

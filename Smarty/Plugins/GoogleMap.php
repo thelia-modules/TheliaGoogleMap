@@ -140,19 +140,24 @@ class GoogleMap extends AbstractSmartyPlugin
             $div .= ' data-show-info="'.$showInfo.'"';
         }
 
-        $cluster = $this->getParam($params,'cluster');
+        $cluster = $this->getParam($params, 'cluster');
         if (null != $cluster) {
             $div .= ' data-cluster="'.$cluster.'"';
         }
 
-        $clusterWidth = $this->getParam($params,'cluster-grid-width');
+        $clusterWidth = $this->getParam($params, 'cluster-grid-width');
         if (null != $clusterWidth) {
             $div .= ' data-cluster-grid-width="'.$clusterWidth.'"';
         }
 
-        $clusterHeight = $this->getParam($params,'cluster-grid-height');
+        $clusterHeight = $this->getParam($params, 'cluster-grid-height');
         if (null != $clusterHeight) {
             $div .= ' data-cluster-grid-height="'.$clusterHeight.'"';
+        }
+
+        $address = $this->getParam($params, 'address');
+        if (null != $address) {
+            $div .= ' data-address="'.$address.'"';
         }
 
         $div .= '></div>';
