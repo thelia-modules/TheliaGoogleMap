@@ -30,4 +30,7 @@
     <route id="theliagooglemap.configuration" path="/admin/module/theliagooglemap/save" methods="post">
         <default key="_controller">TheliaGoogleMap:Configuration:save</default>
     </route>
+    <route id="theliagooglemap.toggle.insert" path="/admin/module/theliagooglemap/toggleinsert" methods="post">
+        <default key="_controller">TheliaGoogleMap:Configuration:toggleHookShow</default>
+    </route>
 </routes>

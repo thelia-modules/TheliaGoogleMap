@@ -57,4 +57,30 @@ class ConfigurationController extends BaseAdminController
 
         return JsonResponse::create($resp, $code);
     }
+
+    /**
+     * Toggle configuration variable to insert script in Hook
+     */
+    public function toggleHookShowAction()
+    {
+        if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array('theliagooglemap'),
+                AccessManager::UPDATE)
+        ) {
+            return $response;
+        }
+
+        $resp = array(
+            "message" => ""
+        );
+        $code = 200;
+        try {
+            ConfigQuery::write("thelia-google-map-hook-all-page", !ConfigQuery::read("thelia-google-map-hook-all-page"));
+            $resp["message"] = $this->getTranslator()->trans("Config toggle succes", [], TheliaGoogleMap::MESSAGE_DOMAIN);
+        } catch (\Exception $e) {
+            $resp["message"] = $e->getMessage();
+            $code = 500;
+        }
+
+        return JsonResponse::create($resp, $code);
+    }
 }

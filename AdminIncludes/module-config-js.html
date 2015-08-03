@@ -28,3 +28,38 @@
         });
     });
 </script>
+{javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
+    <script src="{$asset_url}"></script>
+{/javascripts}
+<script>
+    $(".module-activation").on("switch-change", function (e, data) {
+
+        var checkbox = $(this);
+        var is_checked = data.value;
+        var modal = $("#response-modal");
+        $('body').append('<div class="modal-backdrop fade in" id="loading-event"><div class="loading"></div></div>');
+        var url_management = "{url path="/admin/module/theliagooglemap/toggleinsert"}";
+
+        $.ajax({
+            method: "POST",
+            url: url_management
+        }).always(function () {
+            $("#loading-event").remove();
+        }).done(function () {
+            if (is_checked) {
+                modal.find(".modal-body").html("{intl l="Google map API is now insert in all pages" d="theliagooglemap.bo.default"}");
+            } else {
+                modal.find(".modal-body").html("{intl l="Google map API is now insert via dedicated hook" d="theliagooglemap.bo.default"}");
+            }
+
+            modal.find(".modal-title").html("{intl l="Success" d="theliagooglemap.bo.default"}");
+            modal.modal("show");
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            checkbox.bootstrapSwitch('toggleState', true);
+            modal.find(".modal-body").html("{intl l="An error occured" d="theliagooglemap.bo.default"}");
+            modal.find(".modal-title").html("{intl l="Error" d="theliagooglemap.bo.default"}");
+            modal.modal("show");
+        });
+
+    });
+</script>

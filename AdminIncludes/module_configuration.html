@@ -15,6 +15,23 @@
     </div>
 </div>
 
+<div class="modal fade" id="response-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="general-block-decorator">
     <div class="row">
 
@@ -29,29 +46,64 @@
 
 
                 {form name="theliagooglemap.configuration.form"}
-                <form method="POST" id="theliagooglemap-form" action="{url path="/admin/module/theliagooglemap/save"}" {form_enctype form=$form} class="clearfix">
+                    <form method="POST" id="theliagooglemap-form"
+                          action="{url path="/admin/module/theliagooglemap/save"}" {form_enctype form=$form}
+                          class="clearfix">
 
-                {form_hidden_fields form=$form}
+                        {form_hidden_fields form=$form}
 
-                {form_field form=$form field='apikey'}
-                <div class="form-group">
-                    <label class="control-label" for="{$label_attr.for}">
-                        {$label}
-                    </label>
+                        {form_field form=$form field='apikey'}
+                            <div class="form-group">
+                                <label class="control-label" for="{$label_attr.for}">
+                                    {$label}
+                                </label>
 
-                    {form_error form=$form field="apikey"}{$message}{/form_error}
+                                {form_error form=$form field="apikey"}{$message}{/form_error}
 
-                    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$data}" placeholder="{intl l='Google Map API key'}" />
-                </div>
-                {/form_field}
+                                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}"
+                                       value="{$data}" placeholder="{intl l='Google Map API key'}"/>
+                            </div>
+                        {/form_field}
 
-                <button type="submit" id="theliagooglemap-save" name="theliagooglemap_save" value="save" class="form-submit-button btn btn-sm btn-default" title="{intl l='Save'}">{intl  l='Save'}</button>
-                </form>
+                        <button type="submit" id="theliagooglemap-save" name="theliagooglemap_save" value="save"
+                                class="form-submit-button btn btn-sm btn-default"
+                                title="{intl l='Save'}">{intl  l='Save'}</button>
+                    </form>
                 {/form}
 
             </div>
-
         </div>
-
     </div>
+    <div class="row">
+        <div class="form-container">
+            <div class="col-md-3">
+
+                <div class="form-group">
+                    <label class="control-label" for="toggle-hook">
+                        {intl l="Insert Google API on all pages : "}
+                    </label>
+                    {$ACTIVATE = {config key="thelia-google-map-hook-all-page"}}
+                    <div class="btn-group">
+                        <div class="make-switch switch-small module-activation" id="toggle-hook"
+                             data-on="success" data-off="danger"
+                             data-on-label="<i class='glyphicon glyphicon-ok-circle'></i>"
+                             data-off-label="<i class='glyphicon glyphicon-remove-circle'></i>">
+                            <input type="checkbox" {if $ACTIVATE}checked{/if}>
+                        </div>
+                        <noscript>
+                            {if $ACTIVATE}
+                                <a title="{intl l="Deactivate %title filter" title={$TITLE}}"
+                                   href="{url path="/admin/module/theliagooglemap/toggleinsert" id=$ID}">{intl l="deactivation" d="theliagooglemap.bo.default"}</a>
+                            {else}
+                                <a title="{intl l="activate %title filter" title={$TITLE}}"
+                                   href="{url path="/admin/module/theliagooglemap/toggleinsert" id=$ID}">{intl l="activation" d="theliagooglemap.bo.default"}</a>
+                            {/if}
+                        </noscript>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </div>

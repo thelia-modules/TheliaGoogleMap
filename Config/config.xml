@@ -32,6 +32,7 @@
     <hooks>
         <hook id="theliagooglemap.hook" class="TheliaGoogleMap\Hook\MapFrontHook" scope="request">
             <tag name="hook.event_listener" event="main.stylesheet" type="front" method="onMainStyleSheet" />
+            <tag name="hook.event_listener" event="theliagooglemap.front.insertjs" type="front" method="onTheliaGoogleMapinsertJS" />
             <tag name="hook.event_listener" event="main.after-javascript-include" type="front" method="onMainAfterJVSIncludes" />
         </hook>
     </hooks>

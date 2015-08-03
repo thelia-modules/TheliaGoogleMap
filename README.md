@@ -125,4 +125,18 @@ To customise info window you have to modify following css classes :
 * thelia-google-map-descp
 * thelia-google-map-link
 
+## 6. Options
+
+You can limitate Google Map API include to a particular Hook in module configuration.
+You just have to toggle configuration key and Google Map include script change binding from "main.after-javascript-include"
+to "theliagooglemap.front.insertjs".
+To insert the script in one page add the hook before main include javascript.`
+
+Hook to add :
+
+```
+ {hook name="theliagooglemap.front.insertjs" modulecode="TheliaGoogleMap"}
+```
+
+
 
