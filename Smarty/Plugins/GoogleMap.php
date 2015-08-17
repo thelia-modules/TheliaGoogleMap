@@ -84,6 +84,21 @@ class GoogleMap extends AbstractSmartyPlugin
             $scaleControl=true;
         }
 
+        $streetControl =  $this->getParam($params, 'street-ctrl');
+        if (null == $streetControl) {
+            $streetControl=true;
+        }
+
+        $mapControl =  $this->getParam($params, 'map-ctrl');
+        if (null == $mapControl) {
+            $mapControl=true;
+        }
+
+        $overviewControl =  $this->getParam($params, 'overview-ctrl');
+        if (null == $overviewControl) {
+            $overviewControl=false;
+        }
+
         $marker =  $this->getParam($params, 'show-marker');
         if (null == $marker) {
             $marker=true;
@@ -111,6 +126,9 @@ class GoogleMap extends AbstractSmartyPlugin
             .' data-pancontrol="'.$panControl.'"'
             .' data-scalecontrol="'.$scaleControl.'"'
             .' data-mousecontrol="'.$mouseControl.'"'
+            .' data-streetviewcontrol="'.$streetControl.'"'
+            .' data-maptypecontrol="'.$mapControl.'"'
+            .' data-overviewmapcontrol="'.$overviewControl.'"'
             .' data-template="'.$templateName.'"'
             .' data-marker="'.$marker.'"';
 

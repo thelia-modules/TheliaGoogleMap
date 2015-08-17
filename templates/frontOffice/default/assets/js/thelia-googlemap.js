@@ -20,6 +20,9 @@
         zoomcontrol: true,
         scalecontrol: true,
         mousecontrol: false,
+        overviewmapcontrol:false,
+        streetviewcontrol: true,
+        maptypecontrol: true,
         template: "base",
         pin: null,
         showInfo: true,
@@ -41,6 +44,9 @@
         this.pancontrol = options.pancontrol;
         this.zoomcontrol = options.zoomcontrol;
         this.scalecontrol = options.scalecontrol;
+        this.maptypecontrol = options.maptypecontrol;
+        this.streetviewcontrol = options.streetviewcontrol;
+        this.overviewmapcontrol = options.overviewmapcontrol;
         this.template = options.template;
         this.marker = options.marker;
         this.markers = [];
@@ -129,10 +135,13 @@
             this.mapOptions.panControl = this.pancontrol;
             this.mapOptions.zoomControl = this.zoomcontrol;
             this.mapOptions.scaleControl = this.scalecontrol;
+            this.mapOptions.streetViewControl = this.streetviewcontrol;
+            this.mapOptions.mapTypeControl = this.maptypecontrol;
+            this.mapOptions.overviewMapControl = this.overviewmapcontrol;
         }
 
         if (this.template !== "base") {
-            this.mapOptions.mapTypeControlOptions = {
+            this.mapOptions.maptypecontrolOptions = {
                 mapTypeIds: [google.maps.MapTypeId.ROADMAP, this.template + this.$element.attr("id")]
             };
             this.mapOptions.mapTypeId = this.template + this.$element.attr("id");
@@ -552,6 +561,18 @@
 
             if ($map.attr("data-scalecontrol")) {
                 opts.scalecontrol = formalizeReturn($map.attr("data-scalecontrol"));
+            }
+
+            if ($map.attr("data-maptypecontrol")) {
+                opts.scalecontrol = formalizeReturn($map.attr("data-maptypecontrol"));
+            }
+
+            if ($map.attr("data-streetviewcontrol")) {
+                opts.streetviewcontrol = formalizeReturn($map.attr("data-streetviewcontrol"));
+            }
+
+            if ($map.attr("data-overviewmapcontrol")) {
+                opts.overviewmapcontrol = formalizeReturn($map.attr("data-overviewmapcontrol"));
             }
 
             if ($map.attr("data-mousecontrol")) {

@@ -40,6 +40,9 @@ Somes options are availables :<br>
 |zoom-ctrl      | Boolean       | Used to enable zoom control UI                                            | true
 |pan-ctrl       | Boolean       | Used to enable pan control UI                                             | true
 |scale-ctrl     | Boolean       | Used to enable scale control UI                                           | true
+|map-ctrl       | Boolean       | Used to enable map type control UI                                        | true
+|street-ctrl    | Boolean       | Used to enable street view control UI                                     | true
+|overview-ctrl  | Boolean       | Used to enable overview control UI                                        | false
 |mouse-ctrl     | Boolean       | Used to enable mouse control                                              | false
 |show-marker    | Boolean       | Used to enable showing markers                                            | true
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
