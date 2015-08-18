@@ -53,6 +53,7 @@ Somes options are availables :<br>
 |cluster-grid-width  | Integer  | Width size grid for cluster element                                       | 10
 |cluster-grid-height | Integer  | Height size grid for cluster element                                      | 10
 |pin-cluster-link    | URL      | Used to set a custom pin for cluster marker                               | null
+|geocoder-error-callback| String| Used to set a callback function error handler for geocoder error| console log
 
 ## 3. Marker Source
 
@@ -130,6 +131,8 @@ To customise info window you have to modify following css classes :
 
 ## 6. Options
 
+### 6.1 Insert Google map js
+
 You can limitate Google Map API include to a particular Hook in module configuration.
 You just have to toggle configuration key and Google Map include script change binding from "main.after-javascript-include"
 to "theliagooglemap.front.insertjs".
@@ -141,5 +144,14 @@ Hook to add :
  {hook name="theliagooglemap.front.insertjs" modulecode="TheliaGoogleMap"}
 ```
 
+### 6.2 Exemple for geocoder-error-callback
 
+```
+{google_map id="test-address" zoom=17 address="sdklgjodfh" geocoder-error-callback="callBackGeo"}
+        <script>
+            function callBackGeo(status){
+                alert(status);
+            }
+        </script>
+```
 

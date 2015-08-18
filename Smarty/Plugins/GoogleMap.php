@@ -62,8 +62,6 @@ class GoogleMap extends AbstractSmartyPlugin
             $zoom=0;
         }
 
-
-
         $control =  $this->getParam($params, 'control');
         if (null == $control) {
             $control="false";
@@ -113,9 +111,6 @@ class GoogleMap extends AbstractSmartyPlugin
         if (null == $templateName) {
             $templateName="base";
         }
-
-
-
 
         $div = '<div class="'.$class.'"'
             .' id="'.$id.'"'
@@ -176,6 +171,11 @@ class GoogleMap extends AbstractSmartyPlugin
         $address = $this->getParam($params, 'address');
         if (null != $address) {
             $div .= ' data-address="'.$address.'"';
+        }
+
+        $geocoderErrorCallBack = $this->getParam($params, "geocoder-error-callback");
+        if (null != $geocoderErrorCallBack) {
+            $div .= ' data-geocoder-error-callback="'.$geocoderErrorCallBack .'"';
         }
 
         $div .= '></div>';

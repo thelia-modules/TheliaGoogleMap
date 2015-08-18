@@ -29,7 +29,10 @@
         clustered: false,
         clusterGridWidth: 10,
         clusterGridHeight: 10,
-        pincluster: null
+        pincluster: null,
+        geoCodeErrorCallBack:function(status){
+            console.log("Geocode was not successful for the following reason: " + status);
+        }
     };
 
     /**
@@ -57,6 +60,7 @@
         this.clusterGridWidth = options.clusterGridWidth;
         this.clusterGridHeight = options.clusterGridHeight;
         this.pincluster = options.pincluster;
+        this.geoCodeErrorCallBack = options.geoCodeErrorCallBack;
         if (this.marker) {
             this.markersrc = options.markersrc;
         }
@@ -78,7 +82,7 @@
                     generateMap(that);
 
                 } else {
-                    alert("Geocode was not successful for the following reason: " + status);
+                    that.geoCodeErrorCallBack(status);
                 }
             });
         } else {
@@ -609,6 +613,10 @@
 
             if ($map.attr("data-show-info")) {
                 opts.showInfo = formalizeReturn($map.attr("data-show-info"));
+            }
+
+            if ($map.attr("data-geocoder-error-callback") && $.isFunction(window[$map.attr("data-geocoder-error-callback")])) {
+                opts.geoCodeErrorCallBack = window[$map.attr("data-geocoder-error-callback")];
             }
 
             if ($map.attr("data-marker")) {
