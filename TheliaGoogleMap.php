@@ -30,8 +30,13 @@ class TheliaGoogleMap extends BaseModule
      */
     public function postActivation(ConnectionInterface $con = null)
     {
-        if (!ConfigQuery::read("thelia-google-map-hook-all-page")) {
-            ConfigQuery::write("thelia-google-map-hook-all-page", false);
+        if (ConfigQuery::read("thelia-google-map-hook-all-page")) {
+            TheliaGoogleMap::setConfigValue("thelia-google-map-hook-all-page", ConfigQuery::read("thelia-google-map-hook-all-page"));
+        } elseif (!TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page")) {
+            TheliaGoogleMap::setConfigValue("thelia-google-map-hook-all-page", false);
+        }
+        if (ConfigQuery::read(TheliaGoogleMap::CONF_API_KEY)) {
+            TheliaGoogleMap::setConfigValue(TheliaGoogleMap::CONF_API_KEY, ConfigQuery::read(TheliaGoogleMap::CONF_API_KEY));
         }
     }
 

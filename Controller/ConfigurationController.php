@@ -12,6 +12,7 @@
 /*************************************************************************************/
 namespace TheliaGoogleMap\Controller;
 
+use Thelia\Model\ModuleConfigQuery;
 use TheliaGoogleMap\TheliaGoogleMap;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
@@ -48,7 +49,7 @@ class ConfigurationController extends BaseAdminController
             $vform = $this->validateForm($form);
             $data = $vform->getData();
 
-            ConfigQuery::write(TheliaGoogleMap::CONF_API_KEY, $data["apikey"], false, true);
+            TheliaGoogleMap::setConfigValue(TheliaGoogleMap::CONF_API_KEY, $data["apikey"]);
             $resp["message"] = $this->getTranslator()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
         } catch (\Exception $e) {
             $resp["message"] = $e->getMessage();
@@ -74,6 +75,7 @@ class ConfigurationController extends BaseAdminController
         );
         $code = 200;
         try {
+            TheliaGoogleMap::setConfigValue("thelia-google-map-hook-all-page", !TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page"));
             ConfigQuery::write("thelia-google-map-hook-all-page", !ConfigQuery::read("thelia-google-map-hook-all-page"));
             $resp["message"] = $this->getTranslator()->trans("Config toggle succes", [], TheliaGoogleMap::MESSAGE_DOMAIN);
         } catch (\Exception $e) {

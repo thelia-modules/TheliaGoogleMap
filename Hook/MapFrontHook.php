@@ -40,10 +40,10 @@ class MapFrontHook extends BaseHook
      */
     public function onMainAfterJVSIncludes(HookRenderEvent $event)
     {
-        $api_key = ConfigQuery::read(TheliaGoogleMap::CONF_API_KEY);
+        $api_key = TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY);
 
         if ($api_key) {
-            if (ConfigQuery::read("thelia-google-map-hook-all-page")) {
+            if (TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page")) {
                 $event->add($this->render("googleJS.html", ["API_KEY" => $api_key]));
             }
             $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
@@ -58,8 +58,8 @@ class MapFrontHook extends BaseHook
      */
     public function onTheliaGoogleMapinsertJS(HookRenderEvent $event)
     {
-        if (!ConfigQuery::read("thelia-google-map-hook-all-page")) {
-            $api_key = ConfigQuery::read(TheliaGoogleMap::CONF_API_KEY);
+        if (!TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page")) {
+            $api_key = TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY);
             if ($api_key) {
                 $event->add($this->render("googleJS.html", ["API_KEY" => $api_key]));
             } else {

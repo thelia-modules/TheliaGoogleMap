@@ -53,7 +53,7 @@ class ConfigurationForm extends BaseForm
             "apikey",
             "text",
             array(
-                'data' => ConfigQuery::read(TheliaGoogleMap::CONF_API_KEY, ""),
+                'data' => TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY),
                 'label' => Translator::getInstance()->trans("Api Key"),
                 'label_attr' => array(
                     'for' => "apikey"
