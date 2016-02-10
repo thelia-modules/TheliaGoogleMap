@@ -41,15 +41,9 @@ class MapFrontHook extends BaseHook
     public function onMainAfterJVSIncludes(HookRenderEvent $event)
     {
         if (TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page")) {
-            $api_key = TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY);
-            if ($api_key) {
-
-                $event->add($this->render("googleJS.html", ["API_KEY" => $api_key]));
-                $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
-                $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
-            } else {
-                Tlog::getInstance()->error("API KEY not set");
-            }
+            $event->add($this->render("googleJS.html"));
+            $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
+            $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
         }
     }
 
@@ -59,14 +53,10 @@ class MapFrontHook extends BaseHook
     public function onTheliaGoogleMapinsertJS(HookRenderEvent $event)
     {
         if (!TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page")) {
-            $api_key = TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY);
-            if ($api_key) {
-                $event->add($this->render("googleJS.html", ["API_KEY" => $api_key]));
-                $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
-                $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
-            } else {
-                Tlog::getInstance()->error("API KEY not set");
-            }
+            $event->add($this->render("googleJS.html"));
+            $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
+            $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
+
         }
     }
 }
