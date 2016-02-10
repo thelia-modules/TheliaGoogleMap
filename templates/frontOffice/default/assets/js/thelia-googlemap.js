@@ -35,6 +35,10 @@
         }
     };
 
+    TheliaGoogleMap.prototype.reload = function(){
+        this.setup();
+    };
+
     /**
      * Object Init
      */
@@ -419,7 +423,7 @@
         var that = this;
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
             return function () {
-                that.$element.trigger("click-marker",[that.markerData[i]]);
+                that.$element.trigger("click-marker",[that.markerData[i],that.windowsContent[i]]);
                 that.infowindow.setContent(that.windowsContent[i]);
                 that.infowindow.open(this.getMap(), marker);
             }
@@ -447,7 +451,7 @@
         var that = this;
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
             return function () {
-                that.$element.trigger("click-marker",[that.markerData[i]]);
+                that.$element.trigger("click-marker",[that.markerData[i],that.windowsContent[i]]);
                 that.infowindow.setContent(that.windowsContent[i]);
                 that.infowindow.open(this.getMap(), marker);
             }
