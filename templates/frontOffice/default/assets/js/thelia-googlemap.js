@@ -35,10 +35,6 @@
         }
     };
 
-    TheliaGoogleMap.prototype.reload = function(){
-        this.setup();
-    };
-
     /**
      * Object Init
      */
@@ -487,6 +483,27 @@
 
     };
 
+    /**
+     *  Actions
+     */
+
+    TheliaGoogleMap.prototype.reload = function(){
+        this.setup();
+    };
+
+    TheliaGoogleMap.prototype.search = function(address){
+        var geocoder = new google.maps.Geocoder();
+        var that = this;
+        geocoder.geocode({address: address}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var center = results[0].geometry.location;
+                that.map.setCenter(center);
+            } else {
+                that.geoCodeErrorCallBack(status);
+            }
+        });
+    };
+
 
     // Thelia Google Map PLUGIN DEFINITION
     // ==========================
@@ -496,7 +513,7 @@
      * @returns {*}
      * @constructor
      */
-    function Plugin(option) {
+    function Plugin(option,action) {
         return this.each(function () {
             var $this = $(this);
             var data = $this.data('bs.theliagooglemap');
@@ -504,7 +521,7 @@
 
             if (!data && options.toggle && option == 'show') option = !option;
             if (!data) $this.data('bs.theliagooglemap', (data = new TheliaGoogleMap(this, options)));
-            if (typeof option == 'string') data[option]();
+            if (typeof option == 'string') data[option](action);
         });
     }
 
