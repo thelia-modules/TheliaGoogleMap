@@ -1,13 +1,14 @@
 # Thelia Google Map
 
-
 author : Penalver Antony <apenalver@openstudio.fr>
 
 This module allow to integrate a google map with somes options.
 
+
 ## 1. Installation
 
 ### Manually
+
 * Copy the module into ```<thelia_root>/local/modules/``` directory and be sure that the name of the module is TheliaGoogleMap.
 * Activate it in your thelia administration panel
 
@@ -15,19 +16,20 @@ Warning : You need to configure your google api keys for google maps in configur
 To get api key follow these instructions : https://developers.google.com/maps/documentation/javascript/tutorial
 
 ### Composer
+
 Add it in your main thelia composer.json file
 
 ```
 composer require thelia/thelia-googlemap-module:~1.0
 ```
 
-## 2. Usage
 
+## 2. Usage
 
 Use smarty function to integrate it in you template :
 {google_map id="YOUR_ID"}{/google_map}
 
-Somes options are availables :<br>
+Somes options are availables:  
 
 |Options        |Type           | Description                                                               | Default
 |---            |---            |---                                                                        |---
@@ -46,31 +48,40 @@ Somes options are availables :<br>
 |mouse-ctrl     | Boolean       | Used to enable mouse control                                              | false
 |show-marker    | Boolean       | Used to enable showing markers                                            | true
 |marker-src     | URL           | Used to set an url source to show mutiples markers                        | null
+|marker-src-refresh | Boolean   | Used to refresh marker on map zoom or move                         	    | false
+|marker-src-refresh-ttl | Integer | Time in ms before triggering the URL to refresh markers                 | 100
 |template-name  | String        | Used to set a template on map                                             | base
 |pin-link       | URL           | Used to set a custom pin                                                  | null
 |show-info      | Boolean       | Used to enable info window in map                                         | true
 |cluster        | Boolean       | Used to enable clustering for markers                                     | false
+|cluster-options-callback | String | Set a callback function to define custom configuration for clustering  | {}
+|geocoder-error-callback | String | Used to set a callback function error handler for geocoder error        | console log
+
+Deprecated options in favor of `cluster-options-callback` (since version 1.7) :
+
+|Options        |Type           | Description                                                               | Default
+|---            |---            |---                                                                        |---
 |cluster-grid-width  | Integer  | Width size grid for cluster element                                       | 10
 |cluster-grid-height | Integer  | Height size grid for cluster element                                      | 10
 |pin-cluster-link    | URL      | Used to set a custom pin for cluster marker                               | null
-|geocoder-error-callback| String| Used to set a callback function error handler for geocoder error| console log
+
 
 ## 3. Marker Source
-
 
 To use marker source you need to respect a format.<br>
  
 Json format :<br> 
-```
-   {
+```json
+{
     title : "TITLE MARKER",
     loc : [ "LATITUDE" ,"LONGITUDE" ],
     description : "DESCRIPTION",
     info : "SOME INFORMATIONS,
     link : "URL TO BIND BUTTON",
     link-label : "LABEL FOR BUTTOM"
-   }
+}
 ```   
+
 
 ## 4. Templating
 
@@ -119,6 +130,7 @@ Some template are integrate by default :
 ```
 * 4. Insert your js file in ```main.after-javascript-include``` hook
 
+
 ## 5. Info Window
 
 To customise info window you have to modify following css classes :
@@ -128,6 +140,7 @@ To customise info window you have to modify following css classes :
 * thelia-google-map-title
 * thelia-google-map-descp
 * thelia-google-map-link
+
 
 ## 6. Options
 
@@ -140,18 +153,54 @@ To insert the script in one page add the hook before main include javascript.`
 
 Hook to add :
 
-```
- {hook name="theliagooglemap.front.insertjs" modulecode="TheliaGoogleMap"}
+```smarty
+{hook name="theliagooglemap.front.insertjs" modulecode="TheliaGoogleMap"}
 ```
 
-### 6.2 Exemple for geocoder-error-callback
 
-```
+### 6.2 Example for geocoder-error-callback
+
+```smarty
 {google_map id="test-address" zoom=17 address="sdklgjodfh" geocoder-error-callback="callBackGeo"}
-        <script>
-            function callBackGeo(status){
-                alert(status);
-            }
-        </script>
+<script>
+function callBackGeo(status){
+  alert(status);
+}
+</script>
+```
+
+### 6.3 Example for cluster-options-callback
+
+To use custom cluster options, you have to use the `cluster-options-callback` like this :
+
+```smarty
+{google_map id="test-address" zoom=14 address="sdklgjodfh" cluster="1" cluster-options-callback="clusterOptions"}
+<script>
+function clusterOptions(status){
+  var clusterOptions = {
+    gridSize: 60,
+    styles: [
+      {
+        url: "http:///mysite.com/frontOffice/default/assets/img/cluster-1.png",
+        height: 46,
+        width: 36,
+        anchor: [10, 0],
+        textColor: '#ffffff',
+        textSize: 11
+      },
+      {
+        url: 'http://mysite.com/frontOffice/default/assets/img/cluster2.png',
+        height: 46,
+        width: 36,
+        anchor: [0, 0],
+        textColor: '#ff0000',
+        textSize: 15
+      }
+    ]
+  };
+
+  return clusterOptions;
+}
+</script>
 ```
 

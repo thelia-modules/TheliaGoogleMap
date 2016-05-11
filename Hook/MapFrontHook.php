@@ -44,6 +44,7 @@ class MapFrontHook extends BaseHook
             $event->add($this->render("googleJS.html"));
             $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
             $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
+            $event->add($this->addJS("/assets/js/markerclusterer_compiled.js"));
         }
     }
 
@@ -56,7 +57,7 @@ class MapFrontHook extends BaseHook
             $event->add($this->render("googleJS.html"));
             $event->add($this->addJS("/assets/js/thelia-googlemap-template.js"));
             $event->add($this->addJS("/assets/js/thelia-googlemap.js"));
-
+            $event->add($this->addJS("/assets/js/markerclusterer_compiled.js"));
         }
     }
 }

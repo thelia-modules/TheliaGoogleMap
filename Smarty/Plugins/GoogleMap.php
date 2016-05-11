@@ -133,6 +133,16 @@ class GoogleMap extends AbstractSmartyPlugin
             $div .= ' data-src="' . $markerSrc . '"';
         }
 
+        $markerSrcRefresh = $this->getParam($params, 'marker-src-refresh');
+        if (null != $markerSrc) {
+            $div .= ' data-src-refresh="' . $markerSrcRefresh . '"';
+        }
+
+        $markerSrcRefreshTTL = $this->getParam($params, 'marker-src-refresh-ttl');
+        if (null != $markerSrcRefreshTTL) {
+            $div .= ' data-src-refresh-ttl="' . $markerSrcRefreshTTL . '"';
+        }
+
         $centerLat = $this->getParam($params, 'center-lat');
         $centerLon = $this->getParam($params, 'center-lon');
         if (null != $centerLon && null != $centerLat) {
@@ -142,11 +152,6 @@ class GoogleMap extends AbstractSmartyPlugin
         $pin = $this->getParam($params, 'pin-link');
         if (null != $pin) {
             $div .= ' data-pin="' . $pin . '"';
-        }
-
-        $pinCluster = $this->getParam($params, 'pin-cluster-link');
-        if (null != $pinCluster) {
-            $div .= ' data-cluster-pin="' . $pinCluster . '"';
         }
 
         $showInfo = $this->getParam($params, 'show-info');
@@ -159,14 +164,9 @@ class GoogleMap extends AbstractSmartyPlugin
             $div .= ' data-cluster="' . $cluster . '"';
         }
 
-        $clusterWidth = $this->getParam($params, 'cluster-grid-width');
-        if (null != $clusterWidth) {
-            $div .= ' data-cluster-grid-width="' . $clusterWidth . '"';
-        }
-
-        $clusterHeight = $this->getParam($params, 'cluster-grid-height');
-        if (null != $clusterHeight) {
-            $div .= ' data-cluster-grid-height="' . $clusterHeight . '"';
+        $clusterOptionsCallBack = $this->getParam($params, "cluster-options-callback");
+        if (null != $clusterOptionsCallBack) {
+            $div .= ' data-cluster-options-callback="' . $clusterOptionsCallBack . '"';
         }
 
         $address = $this->getParam($params, 'address');
