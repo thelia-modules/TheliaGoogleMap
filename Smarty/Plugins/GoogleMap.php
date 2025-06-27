@@ -25,7 +25,7 @@ class GoogleMap extends AbstractSmartyPlugin
 {
 
     /**
-     * @return an array of SmartyPluginDescriptor
+     * @return SmartyPluginDescriptor[]
      */
     public function getPluginDescriptors()
     {

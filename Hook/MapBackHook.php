@@ -22,10 +22,10 @@ use Thelia\Core\Hook\BaseHook;
  */
 class MapBackHook extends BaseHook
 {
-        public function onModuleConfig(HookRenderEvent $event)
-        {
-            $event->add($this->render("module_configuration.html"));
-        }
+    public function onModuleConfig(HookRenderEvent $event)
+    {
+        $event->add($this->render("module_configuration.html"));
+    }
 
     public function onModuleConfigInsertJS(HookRenderEvent $event)
     {

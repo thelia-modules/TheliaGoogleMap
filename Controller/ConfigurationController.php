@@ -12,6 +12,8 @@
 /*************************************************************************************/
 namespace TheliaGoogleMap\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use Thelia\Core\Translation\Translator;
 use Thelia\Model\ModuleConfigQuery;
 use TheliaGoogleMap\TheliaGoogleMap;
 use Thelia\Controller\Admin\BaseAdminController;
@@ -31,7 +33,7 @@ class ConfigurationController extends BaseAdminController
      * Methode used to save API Key for google map in Config
      * @return mixed|null|\Symfony\Component\HttpFoundation\Response|static
      */
-    public function saveAction()
+    public function saveAction(Request $request)
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), array('theliagooglemap'),
                 AccessManager::UPDATE)
@@ -39,7 +41,7 @@ class ConfigurationController extends BaseAdminController
             return $response;
         }
 
-        $form = new ConfigurationForm($this->getRequest());
+        $form = $this->createForm(ConfigurationForm::getName());
         $resp = array(
             "message" => ""
         );
@@ -50,13 +52,13 @@ class ConfigurationController extends BaseAdminController
             $data = $vform->getData();
 
             TheliaGoogleMap::setConfigValue(TheliaGoogleMap::CONF_API_KEY, $data["apikey"]);
-            $resp["message"] = $this->getTranslator()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
+            $resp["message"] = Translator::getInstance()->trans("API Key saved", [], TheliaGoogleMap::MESSAGE_DOMAIN);
         } catch (\Exception $e) {
             $resp["message"] = $e->getMessage();
             $code = 500;
         }
 
-        return JsonResponse::create($resp, $code);
+        return new JsonResponse($resp, $code);
     }
 
     /**
@@ -77,12 +79,12 @@ class ConfigurationController extends BaseAdminController
         try {
             TheliaGoogleMap::setConfigValue("thelia-google-map-hook-all-page", !TheliaGoogleMap::getConfigValue("thelia-google-map-hook-all-page"));
             ConfigQuery::write("thelia-google-map-hook-all-page", !ConfigQuery::read("thelia-google-map-hook-all-page"));
-            $resp["message"] = $this->getTranslator()->trans("Config toggle succes", [], TheliaGoogleMap::MESSAGE_DOMAIN);
+            $resp["message"] = Translator::getInstance()->trans("Config toggle succes", [], TheliaGoogleMap::MESSAGE_DOMAIN);
         } catch (\Exception $e) {
             $resp["message"] = $e->getMessage();
             $code = 500;
         }
 
-        return JsonResponse::create($resp, $code);
+        return new JsonResponse($resp, $code);
     }
 }

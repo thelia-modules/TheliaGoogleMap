@@ -21,13 +21,6 @@
     </commands>
 
 
-    <services>
-        <service id="theliagooglemap.smarty.plugin" class="TheliaGoogleMap\Smarty\Plugins\GoogleMap" scope="request">
-            <tag name="thelia.parser.register_plugin"/>
-        </service>
-    </services>
-
-
 
     <hooks>
         <hook id="theliagooglemap.hook" class="TheliaGoogleMap\Hook\MapFrontHook" scope="request">
