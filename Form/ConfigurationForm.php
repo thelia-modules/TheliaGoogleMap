@@ -13,6 +13,7 @@
 
 namespace TheliaGoogleMap\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Thelia\Model\ConfigQuery;
 use Thelia\Form\BaseForm;
 use Thelia\Core\Translation\Translator;
@@ -51,21 +52,21 @@ class ConfigurationForm extends BaseForm
 
         $form->add(
             "apikey",
-            "text",
-            array(
+            TextType::class,
+            [
                 'data' => TheliaGoogleMap::getConfigValue(TheliaGoogleMap::CONF_API_KEY),
                 'label' => Translator::getInstance()->trans("Api Key"),
-                'label_attr' => array(
+                'label_attr' => [
                     'for' => "apikey"
-                ),
-            )
+                ],
+            ]
         );
     }
 
     /**
      * @return string the name of you form. This name must be unique
      */
-    public function getName()
+    public static function getName()
     {
         return "theliagooglemap_create";
     }

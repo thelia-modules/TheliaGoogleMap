@@ -13,6 +13,7 @@
 namespace TheliaGoogleMap;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Model\ConfigQuery;
 use Thelia\Module\BaseModule;
@@ -28,7 +29,7 @@ class TheliaGoogleMap extends BaseModule
      *
      * @param ConnectionInterface $con
      */
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(ConnectionInterface $con = null): void
     {
         if (ConfigQuery::read("thelia-google-map-hook-all-page")) {
             TheliaGoogleMap::setConfigValue("thelia-google-map-hook-all-page", ConfigQuery::read("thelia-google-map-hook-all-page"));
@@ -40,6 +41,16 @@ class TheliaGoogleMap extends BaseModule
         }
     }
 
+    /**
+     * Defines how services are loaded in your modules.
+     */
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+            ->autowire(true)
+            ->autoconfigure(true);
+    }
 
     public function getHooks()
     {
